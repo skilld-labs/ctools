@@ -100,8 +100,7 @@ function page_manager_node_view_page($node) {
     return $output;
   }
 
-  // Otherwise try loading an override plugin with a node_page_view()
-  // fallback.
+  // Otherwise try loading an override plugin with a node_page_view() fallback.
   $function = 'node_page_view';
   // Try loading an override plugin.
   foreach (module_implements('page_manager_override') as $module) {
