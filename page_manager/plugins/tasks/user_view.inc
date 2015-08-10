@@ -69,7 +69,7 @@ function page_manager_user_view_menu_alter(&$items, $task) {
  * user view, which is user_page_view().
  */
 function page_manager_user_view_page($account) {
-  // Load my task plugin:
+  // Load my task plugin.
   $task = page_manager_get_task('user_view');
 
   // Load the account into a context.
@@ -77,14 +77,12 @@ function page_manager_user_view_page($account) {
   ctools_include('context-task-handler');
   $contexts = ctools_context_handler_get_task_contexts($task, '', array($account));
 
-  // Build content. @todo -- this may not be right.
-  user_build_content($account);
-
   $output = ctools_context_handler_render($task, '', $contexts, array($account->uid));
   if ($output !== FALSE) {
     return $output;
   }
 
+  // Otherwise try loading an override plugin with a user_view() fallback.
   $function = 'user_view';
   foreach (module_implements('page_manager_override') as $module) {
     $call = $module . '_page_manager_override';
@@ -94,14 +92,6 @@ function page_manager_user_view_page($account) {
     }
   }
 
-  // Otherwise, fall back.
-  if ($function == 'user_view') {
-    module_load_include('inc', 'user', 'user.pages');
-  }
-  //fire off "view" op so that triggers still work
-  // @todo -- this doesn't work anymore, and the alternatives seem bad.
-  // will have to figure out how to fix this.
-//  user_module_invoke('view', $array = array(), $account);
   return $function($account);
 }
 
